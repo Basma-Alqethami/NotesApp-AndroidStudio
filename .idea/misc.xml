@@ -8,12 +8,14 @@
         <entry key="app/src/main/res/drawable/back.xml" value="0.31145833333333334" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.31145833333333334" />
         <entry key="app/src/main/res/drawable/ic_baseline_arrow_back_ios_24.xml" value="0.31145833333333334" />
+        <entry key="app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.31145833333333334" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.31145833333333334" />
         <entry key="app/src/main/res/layout/activity_add_notes.xml" value="0.16293226733461846" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.14067647075290238" />
         <entry key="app/src/main/res/layout/activity_show_notes.xml" value="0.29347826086956524" />
         <entry key="app/src/main/res/layout/row.xml" value="0.40382488932243366" />
-        <entry key="app/src/main/res/menu/add_new_note.xml" value="1.079862898892227" />
+        <entry key="app/src/main/res/menu/add_new_note.xml" value="0.2367987389270284" />
+        <entry key="app/src/main/res/menu/back_and_delete.xml" value="0.2796296296296296" />
         <entry key="app/src/main/res/menu/back_to_main.xml" value="0.32331231108029346" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.30648148148148147" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.31145833333333334" />

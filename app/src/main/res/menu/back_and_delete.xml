@@ -3,9 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/BackMenu"
+        android:id="@+id/DeleteMenu"
+        android:icon="@drawable/ic_baseline_delete_24"
+        android:iconTint="@color/black"
         android:title="Back"
         app:showAsAction="ifRoom" />
 
-
+<item
+        android:id="@+id/BackMenu1"
+        android:title="Back"
+        app:showAsAction="ifRoom" />
 </menu>
