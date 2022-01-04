@@ -3,19 +3,19 @@ package com.example.notesapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
+import kotlinx.coroutines.*
 
 class ShowNotes : AppCompatActivity() {
 
     private lateinit var et_Title: EditText
     private lateinit var et_Note: EditText
     private lateinit var btnUpdate: Button
-    private val DB by lazy { Database(applicationContext) }
+    private val DB by lazy { NotesDatabase.getDatabase(this).note_Dao() }
+
     private var id = 0
 
     var title11 = ""
@@ -39,9 +39,15 @@ class ShowNotes : AppCompatActivity() {
             title11 = et_Title.text.toString()
             note11 = et_Note.text.toString()
 
-            DB.updateData(Data(id, title11, note11))
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            CoroutineScope(Dispatchers.IO).launch {
+                val noteData = async { DB.updateNote(Data(id, title11, note11)) }.await()
+                if (noteData != null) {
+                    withContext(Dispatchers.Main) {
+                        val intent = Intent(this@ShowNotes, MainActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
+            }
         }
     }
 
@@ -62,9 +68,15 @@ class ShowNotes : AppCompatActivity() {
                 title11 = et_Title.text.toString()
                 note11 = et_Note.text.toString()
 
-                DB.deleteData(Data(id, title11, note11))
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
+                CoroutineScope(Dispatchers.IO).launch {
+                    val noteData = async { DB.deleteNote(Data(id, title11, note11)) }.await()
+                    if (noteData != null) {
+                        withContext(Dispatchers.Main) {
+                            val intent = Intent(this@ShowNotes, MainActivity::class.java)
+                            startActivity(intent)
+                        }
+                    }
+                }
                 return true
             }
         }

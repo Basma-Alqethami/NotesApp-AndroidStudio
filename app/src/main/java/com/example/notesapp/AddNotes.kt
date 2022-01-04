@@ -8,6 +8,12 @@ import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.IOException
 
 class AddNotes : AppCompatActivity() {
@@ -15,7 +21,8 @@ class AddNotes : AppCompatActivity() {
     private lateinit var etTitleAdd: EditText
     private lateinit var edNoteAdd: EditText
     private lateinit var btnSave: Button
-    private val DB by lazy { Database(applicationContext) }
+    private val DB by lazy { NotesDatabase.getDatabase(this).note_Dao() }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,15 +56,27 @@ class AddNotes : AppCompatActivity() {
     }
 
     private fun NoteIsNotEmpty(textTitle: String, textNote: String) {
-        DB.saveData(textTitle, textNote)
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+        CoroutineScope(IO).launch {
+            val noteData = async { DB.addNote(Data(0,textTitle, textNote)) }.await()
+            if (noteData !=null) {
+                withContext(Main) {
+                    val intent = Intent(this@AddNotes, MainActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+        }
     }
 
     private fun NoteIsEmpty(textTitle: String) {
-        DB.saveData(textTitle, "")
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+        CoroutineScope(IO).launch {
+            val noteData = async { DB.addNote(Data(0,textTitle, "")) }.await()
+            if (noteData !=null) {
+                withContext(Main) {
+                    val intent = Intent(this@AddNotes, MainActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
