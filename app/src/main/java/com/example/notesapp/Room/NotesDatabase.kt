@@ -1,4 +1,4 @@
-package com.example.notesapp
+package com.example.notesapp.Room
 
 import android.content.Context
 import androidx.room.Database
@@ -14,7 +14,7 @@ abstract class NotesDatabase: RoomDatabase() {
         @Volatile
         private var INSTANCE: NotesDatabase? = null
 
-        fun getDatabase(context: Context): NotesDatabase{
+        fun getDatabase(context: Context): NotesDatabase {
             val tempInstance = INSTANCE
             if(tempInstance != null){
                 return tempInstance

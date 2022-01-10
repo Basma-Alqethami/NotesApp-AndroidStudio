@@ -1,10 +1,12 @@
-package com.example.notesapp
+package com.example.notesapp.Adapter
 
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.notesapp.Room.Data
+import com.example.notesapp.Activity.ShowNotes
 import com.example.notesapp.databinding.RowBinding
 
 

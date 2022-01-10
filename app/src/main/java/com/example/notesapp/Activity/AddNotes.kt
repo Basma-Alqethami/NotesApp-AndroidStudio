@@ -1,4 +1,4 @@
-package com.example.notesapp
+package com.example.notesapp.Activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +8,11 @@ import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import com.example.notesapp.Model.NoteViewModel
+import com.example.notesapp.R
+import com.example.notesapp.Room.Data
+import com.example.notesapp.Room.NotesDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -21,7 +26,7 @@ class AddNotes : AppCompatActivity() {
     private lateinit var etTitleAdd: EditText
     private lateinit var edNoteAdd: EditText
     private lateinit var btnSave: Button
-    private val DB by lazy { NotesDatabase.getDatabase(this).note_Dao() }
+    lateinit var viewModel: NoteViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +36,8 @@ class AddNotes : AppCompatActivity() {
         etTitleAdd = findViewById(R.id.etTitleAdd)
         edNoteAdd = findViewById(R.id.edNoteAdd)
         btnSave = findViewById(R.id.btnSave)
+
+        viewModel = ViewModelProvider(this).get(NoteViewModel::class.java)
 
         btnSave.setOnClickListener { SavaData() }
 
@@ -56,26 +63,18 @@ class AddNotes : AppCompatActivity() {
     }
 
     private fun NoteIsNotEmpty(textTitle: String, textNote: String) {
-        CoroutineScope(IO).launch {
-            val noteData = async { DB.addNote(Data(0,textTitle, textNote)) }.await()
-            if (noteData !=null) {
-                withContext(Main) {
-                    val intent = Intent(this@AddNotes, MainActivity::class.java)
-                    startActivity(intent)
-                }
-            }
+        val noteData = viewModel.add(Data(0, textTitle, textNote))
+        if (noteData != null) {
+            val intent = Intent(this@AddNotes, MainActivity::class.java)
+            startActivity(intent)
         }
     }
 
     private fun NoteIsEmpty(textTitle: String) {
-        CoroutineScope(IO).launch {
-            val noteData = async { DB.addNote(Data(0,textTitle, "")) }.await()
-            if (noteData !=null) {
-                withContext(Main) {
-                    val intent = Intent(this@AddNotes, MainActivity::class.java)
-                    startActivity(intent)
-                }
-            }
+        val noteData = viewModel.add(Data(0, textTitle, ""))
+        if (noteData != null) {
+            val intent = Intent(this@AddNotes, MainActivity::class.java)
+            startActivity(intent)
         }
     }
 

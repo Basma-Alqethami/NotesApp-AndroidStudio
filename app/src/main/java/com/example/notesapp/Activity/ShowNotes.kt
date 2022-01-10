@@ -1,4 +1,4 @@
-package com.example.notesapp
+package com.example.notesapp.Activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +7,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
+import androidx.lifecycle.ViewModelProvider
+import com.example.notesapp.Model.NoteViewModel
+import com.example.notesapp.R
+import com.example.notesapp.Room.Data
+import com.example.notesapp.Room.NotesDatabase
 import kotlinx.coroutines.*
 
 class ShowNotes : AppCompatActivity() {
@@ -14,10 +19,10 @@ class ShowNotes : AppCompatActivity() {
     private lateinit var et_Title: EditText
     private lateinit var et_Note: EditText
     private lateinit var btnUpdate: Button
-    private val DB by lazy { NotesDatabase.getDatabase(this).note_Dao() }
+
+    lateinit var viewModel: NoteViewModel
 
     private var id = 0
-
     var title11 = ""
     var note11 = ""
 
@@ -29,6 +34,8 @@ class ShowNotes : AppCompatActivity() {
         et_Note = findViewById(R.id.et_Note)
         btnUpdate = findViewById(R.id.btnUpdate)
 
+        viewModel = ViewModelProvider(this).get(NoteViewModel::class.java)
+
         val disData = intent.getSerializableExtra("displayData") as Data
         id = disData.id
         et_Title.setText(disData.title)
@@ -39,14 +46,10 @@ class ShowNotes : AppCompatActivity() {
             title11 = et_Title.text.toString()
             note11 = et_Note.text.toString()
 
-            CoroutineScope(Dispatchers.IO).launch {
-                val noteData = async { DB.updateNote(Data(id, title11, note11)) }.await()
-                if (noteData != null) {
-                    withContext(Dispatchers.Main) {
-                        val intent = Intent(this@ShowNotes, MainActivity::class.java)
-                        startActivity(intent)
-                    }
-                }
+            val noteData = viewModel.update(Data(id, title11, note11))
+            if (noteData != null) {
+                val intent = Intent(this@ShowNotes, MainActivity::class.java)
+                startActivity(intent)
             }
         }
     }
@@ -68,14 +71,10 @@ class ShowNotes : AppCompatActivity() {
                 title11 = et_Title.text.toString()
                 note11 = et_Note.text.toString()
 
-                CoroutineScope(Dispatchers.IO).launch {
-                    val noteData = async { DB.deleteNote(Data(id, title11, note11)) }.await()
-                    if (noteData != null) {
-                        withContext(Dispatchers.Main) {
-                            val intent = Intent(this@ShowNotes, MainActivity::class.java)
-                            startActivity(intent)
-                        }
-                    }
+                val noteData = viewModel.delete(Data(id, title11, note11))
+                if (noteData != null) {
+                    val intent = Intent(this@ShowNotes, MainActivity::class.java)
+                    startActivity(intent)
                 }
                 return true
             }
